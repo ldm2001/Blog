@@ -1,0 +1,21 @@
+{
+  "configurations": [
+    {
+      "type": "java",
+      "name": "BoardBackApplication",
+      "request": "launch",
+      "mainClass": "com.blog.board_back.BoardBackApplication",
+      "projectName": "board-back"
+    },
+    {
+      "type": "java",
+      "name": "Spring Boot-BoardBackApplication<board-back>",
+      "request": "launch",
+      "cwd": "${workspaceFolder}",
+      "mainClass": "com.ldm2001.board_back.BoardBackApplication",
+      "projectName": "board-back",
+      "args": "",
+      "envFile": "${workspaceFolder}/.env"
+    }
+  ]
+}
