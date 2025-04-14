@@ -19,8 +19,8 @@ Blog (Spring-React-Mysql)
 │       ├── pages                  # 실제 화면을 구성하는 라우팅 페이지 컴포넌트
 │       ├── stores                 # Zustand 기반 전역 상태 관리 (인증, 유저 정보 등)
 │       ├── types                  # TypeScript 인터페이스 및 타입 정의
-│       ├── App.tsx               # 라우팅 구성 및 인증 상태 확인
-│       └── index.tsx             # 앱 진입
+│       ├── App.tsx                # 라우팅 구성 및 인증 상태 확인
+│       └── index.tsx              # 앱 진입
 │
 ├── board-back (백엔드 프로젝트)
 │   ├── src
@@ -50,7 +50,6 @@ Blog (Spring-React-Mysql)
 - 게시글 즐겨찾기(좋아요) 기능
 - 게시글 조회수 증가 및 인기글 기능
 
-## 프론트엔드 및 백엔드 코드 요약
 ### 프론트엔드
 
 #### App.tsx
@@ -101,6 +100,6 @@ Blog (Spring-React-Mysql)
 
 #### 추후 프로필 수정 부분 제작
 
-![Uploading image.png…]()
+[![Uploading image.png…]()](https://github.com/ldm2001/Blog/blob/master/Blog%20Image/Main%20Page.jpeg?raw=true)
 
 
