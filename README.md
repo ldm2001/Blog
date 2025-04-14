@@ -10,32 +10,32 @@
 Blog (Spring-React-Mysql)
 
 ├── board-front (프론트엔드 프로젝트)
-│   ├── public                     # HTML 템플릿 및 정적 리소스 (favicon, manifest 등)
+│   ├── public                     # 템플릿 및 리소스
 │   └── src
 │       ├── apis                   # Axios 기반 API 요청 함수 정의
-│       ├── components             # 공통 UI 컴포넌트 (버튼, 카드 등)
-│       ├── layouts                # 전체 앱 레이아웃 컴포넌트 (ex. Container)
+│       ├── components             # 공통 UI 컴포넌트 
+│       ├── layouts                # 전체 앱 레이아웃 컴포넌트 
 │       ├── mocks                  # 목업 테스트용 데이터 파일들
 │       ├── pages                  # 실제 화면을 구성하는 라우팅 페이지 컴포넌트
 │       ├── stores                 # Zustand 기반 전역 상태 관리 (인증, 유저 정보 등)
 │       ├── types                  # TypeScript 인터페이스 및 타입 정의
 │       ├── App.tsx               # 라우팅 구성 및 인증 상태 확인
-│       └── index.tsx             # React 앱 진입점
+│       └── index.tsx             # 앱 진입
 │
 ├── board-back (백엔드 프로젝트)
 │   ├── src
 │   │   ├── main
 │   │   │   ├── java/com/project/board
 │   │   │   │   ├── config         # CORS 설정, 시큐리티, Swagger 등 서버 설정 관련 클래스
-│   │   │   │   ├── controller     # RESTful API 핸들러, 클라이언트 요청 처리
-│   │   │   │   ├── dto            # 요청/응답 DTO 정의 (데이터 포맷 구조화)
+│   │   │   │   ├── controller     # RESTful API, 클라이언트 요청 처리
+│   │   │   │   ├── dto            # 요청/응답 DTO 정의 
 │   │   │   │   ├── entity         # JPA 엔티티 정의, DB 테이블과 매핑되는 클래스
 │   │   │   │   ├── exception      # 커스텀 예외 클래스 및 전역 예외 처리 핸들러
 │   │   │   │   ├── repository     # 데이터 접근 계층, JPA를 활용한 쿼리 인터페이스
-│   │   │   │   └── service        # 비즈니스 로직 구현 계층 (게시판 처리 등)
+│   │   │   │   └── service        # 로직 구현 계층 
 │   │   │   └── resources
 │   │   │       ├── application.properties # DB, 포트, 로깅, 시큐리티 등 서버 설정
-│   │   │       └── static/templates       # 정적 파일 또는 템플릿 리소스 (사용 시)
+│   │   │       └── static/templates       # 정적 파일 또는 템플릿 리소스 
 │   │   └── test/java             # JUnit 기반 테스트 코드
 │   └── pom.xml                   # Maven 의존성 및 빌드 설정 파일
 │
