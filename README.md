@@ -50,6 +50,7 @@ Blog (Spring-React-Mysql)
 - 게시글 즐겨찾기(좋아요) 기능
 - 게시글 조회수 증가 및 인기글 기능
 
+## 프론트엔드 및 백엔드 코드 요약
 ### 프론트엔드
 
 #### App.tsx
@@ -98,8 +99,12 @@ Blog (Spring-React-Mysql)
 #### application.properties
 - DB 정보, 서버 포트, JPA 옵션, 시큐리티 키 등 프로젝트 설정을 정의
 
-#### 추후 프로필 수정 부분 제작
+#### 추후 유저 프로필 수정 부분 제작
 
-[![Uploading image.png…]()](https://github.com/ldm2001/Blog/blob/master/Blog%20Image/Main%20Page.jpeg?raw=true)
+![alt text](<Main Page.jpeg>)
 
+![alt text](Login.png)
 
+![alt text](<Board Write.jpeg>)
+
+![alt text](Board.jpeg)
