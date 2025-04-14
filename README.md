@@ -101,10 +101,4 @@ Blog (Spring-React-Mysql)
 
 #### 추후 유저 프로필 수정 부분 제작
 
-![alt text](<Main Page.jpeg>)
-
-![alt text](Login.png)
-
-![alt text](<Board Write.jpeg>)
-
-![alt text](Board.jpeg)
+/Users/ldongmin/Desktop/Blog Image/Main Page.jpeg
