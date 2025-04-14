@@ -101,4 +101,3 @@ Blog (Spring-React-Mysql)
 
 #### 추후 유저 프로필 수정 부분 제작
 
-/Users/ldongmin/Desktop/Blog Image/Main Page.jpeg
