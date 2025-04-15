@@ -18,7 +18,7 @@ Blog (Spring-React-Mysql)
 │       ├── mocks                  # 목업 테스트용 데이터 파일들
 │       ├── pages                  # 실제 화면을 구성하는 라우팅 페이지 컴포넌트
 │       ├── stores                 # Zustand 기반 전역 상태 관리 (인증, 유저 정보 등)
-│       ├── types                  # TypeScript 인터페이스 및 타입 정의
+│       ├── types                  # 인터페이스 및 타입 정의 (TypeScript)
 │       ├── App.tsx                # 라우팅 구성 및 인증 상태 확인
 │       └── index.tsx              # 앱 진입
 │
@@ -36,10 +36,10 @@ Blog (Spring-React-Mysql)
 │   │   │   └── resources
 │   │   │       ├── application.properties # DB, 포트, 로깅, 시큐리티 등 서버 설정
 │   │   │       └── static/templates       # 정적 파일 또는 템플릿 리소스 
-│   │   └── test/java             # JUnit 기반 테스트 코드
-│   └── pom.xml                   # Maven 의존성 및 빌드 설정 파일
+│   │   └── test/java             # 테스트 코드
+│   └── pom.xml                   # Maven 의존성 및 빌드 설정 
 │
-├── board.vuerd.json              # ERD 설계를 위한 Vuerd JSON 모델링 파일
+├── board.vuerd.json              # ERD 설계, JSON 모델링 파일
 └── README.md                     # 프로젝트 설명 문서
 ```
 
