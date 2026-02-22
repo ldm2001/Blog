@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#4ae386" />
+      <stop offset="50%" stop-color="#2ec7c1" />
+      <stop offset="100%" stop-color="#008efc" />
+    </linearGradient>
+  </defs>
+
+  <!-- Browser window frame -->
+  <path d="M48,128 a80,80 0 0,1 80,-80 h256 a80,80 0 0,1 80,80 v256 a80,80 0 0,1 -40,69 l-58,-58 a40,40 0 0,0 58,-31 v-184 h-336 v184 a40,40 0 0,0 40,40 h184 l-40,40 h-144 a80,80 0 0,1 -80,-80 z" fill="url(#grad)" />
+  
+  <!-- Browser top bar -->
+  <path d="M48,128 a80,80 0 0,1 80,-80 h256 a80,80 0 0,1 80,80 v32 h-416 z" fill="url(#grad)" />
+  
+  <circle cx="112" cy="112" r="20" fill="#ffffff" />
+  <circle cx="184" cy="112" r="20" fill="#ffffff" />
+  
+  <!-- Big pencil pointing bottom right -->
+  <path d="M224,256 l144,144 l64,-64 l-144,-144 z" fill="url(#grad)" />
+  <!-- Pencil tip -->
+  <path d="M224,256 l144,144 l-32,32 l-160,-160 z" fill="url(#grad)" />
+  <!-- Pencil back cap -->
+  <path d="M386,174 l40,40 l-16,16 l-40,-40 z" fill="url(#grad)" />
+  
+  <!-- Pencil inner cutout (to make it look like an outline) -->
+  <path d="M280,336 l32,32 l48,-48 l-32,-32 z" fill="#ffffff" />
+</svg>

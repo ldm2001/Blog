@@ -1,0 +1,11 @@
+{
+  "sessionCount": 15,
+  "lastSession": {
+    "startedAt": "2026-02-22T07:01:06.644Z",
+    "platform": "claude",
+    "level": "Starter"
+  },
+  "currentFeature": "authentication",
+  "phase": "check",
+  "matchRate": 95
+}
