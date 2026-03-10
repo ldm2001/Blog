@@ -31,9 +31,12 @@ Spring Boot + React + MySQL 기반으로 구현한 블로그 서비스
 - Daum Postcode API를 통한 주소 입력
 - 프로필 이미지 업로드 (파일 서버 저장)
 - **JWT AccessToken** (15분) + **RefreshToken** (7일) 발급
-  - RefreshToken은 UUID opaque token, DB 저장
-  - **Token Rotation**: 갱신 시마다 새 RefreshToken 발급 (이전 토큰 자동 무효화)
-  - AccessToken 만료 시 자동 갱신 (`POST /auth/refresh`)
+  - AccessToken은 응답 본문으로 반환
+  - RefreshToken은 **HttpOnly 쿠키**로 발급
+  - RefreshToken은 UUID opaque token 기반이며, 서버에는 **해시값 + 만료 시간** 저장
+  - **Token Rotation**: 갱신 시마다 새 RefreshToken 쿠키 발급 (이전 토큰 자동 무효화)
+  - AccessToken 만료 시 쿠키 기반으로 자동 갱신 (`POST /auth/refresh`)
+  - 로그아웃 시 서버에서 RefreshToken 폐기 (`POST /auth/sign-out`)
 - Spring Security 기반 엔드포인트별 인가 처리
 
 ### 게시물 (Board)
@@ -79,8 +82,9 @@ Spring Boot + React + MySQL 기반으로 구현한 블로그 서비스
 | Method | URL | 설명 |
 |--------|-----|------|
 | POST | `/api/v1/auth/sign-up` | 회원가입 |
-| POST | `/api/v1/auth/sign-in` | 로그인 (AccessToken + RefreshToken 반환) |
-| POST | `/api/v1/auth/refresh` | AccessToken 갱신 |
+| POST | `/api/v1/auth/sign-in` | 로그인 (AccessToken 반환 + RefreshToken HttpOnly 쿠키 발급) |
+| POST | `/api/v1/auth/refresh` | RefreshToken 쿠키 기반 AccessToken 갱신 |
+| POST | `/api/v1/auth/sign-out` | 로그아웃 (서버 RefreshToken 폐기 + 쿠키 만료) |
 
 ### User
 | Method | URL | 설명 |
@@ -126,7 +130,7 @@ Spring Boot + React + MySQL 기반으로 구현한 블로그 서비스
 ### Backend (Spring Boot)
 ```bash
 cd board-back
-./mvnw spring-boot:run
+./gradlew bootRun
 ```
 
 ### Frontend (Vite)
@@ -140,6 +144,9 @@ npm start
 ```sql
 CREATE DATABASE board;
 USE board;
+
+ALTER TABLE `user`
+    ADD COLUMN `refresh_token_expires_at` DATETIME NULL AFTER `refresh_token`;
 ```
 
 ---
@@ -156,4 +163,3 @@ USE board;
 ![게시글](https://github.com/user-attachments/assets/22a531d0-38df-4f6e-833c-f3d5a25b7278)
 ![AI 제목 추천](https://github.com/user-attachments/assets/679f134e-2f67-4da1-b313-51400bbd16e0)
 ![키워드 검색](https://github.com/user-attachments/assets/b8083f97-0a9e-47e8-aaee-eaef7b716a00)
-
