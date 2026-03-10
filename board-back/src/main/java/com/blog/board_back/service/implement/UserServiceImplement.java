@@ -1,8 +1,10 @@
 package com.blog.board_back.service.implement;
 
 import java.util.List;
+import java.util.Locale;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -125,8 +127,16 @@ public class UserServiceImplement implements UserService {
 
       // 닉네임 업데이트 후 저장
       userEntity.setNickname(nickname);
-      userRepository.save(userEntity);
+      userRepository.saveAndFlush(userEntity);
 
+    } catch (DataIntegrityViolationException exception) {
+      log.warn("UserService patchNickname integrity violation", exception);
+
+      String message = getRootMessage(exception);
+      if (message.contains("uk_user_nickname"))
+        return PatchNicknameResponseDto.duplicateNickname();
+
+      return ResponseDto.databaseError();
     } catch (Exception exception) {
       exception.printStackTrace();
       return ResponseDto.databaseError();
@@ -157,6 +167,17 @@ public class UserServiceImplement implements UserService {
     }
 
     return PatchProfileImageResponseDto.success();
+  }
+
+  private String getRootMessage(Throwable throwable) {
+    Throwable root = throwable;
+
+    while (root.getCause() != null) root = root.getCause();
+
+    String message = root.getMessage();
+    if (message == null) return "";
+
+    return message.toLowerCase(Locale.ROOT);
   }
 
 }

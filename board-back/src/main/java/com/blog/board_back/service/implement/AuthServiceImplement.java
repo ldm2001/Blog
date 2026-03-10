@@ -1,8 +1,11 @@
 package com.blog.board_back.service.implement;
 
 import java.time.LocalDateTime;
+import java.util.Locale;
+import java.util.Optional;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -66,8 +69,11 @@ public class AuthServiceImplement implements AuthService {
       dto.setPassword(encodedPassword);
 
       UserEntity userEntity = new UserEntity(dto); // 엔티티 생성
-      userRepository.save(userEntity); // DB 저장
+      userRepository.saveAndFlush(userEntity); // DB 저장 및 제약 즉시 검증
 
+    } catch (DataIntegrityViolationException exception) {
+        log.warn("AuthService signUp integrity violation", exception);
+        return getSignUpIntegrityViolationResponse(exception);
     } catch (Exception exception) {
         log.error("AuthService error", exception);
         return ResponseDto.databaseError(); // DB 오류 처리
@@ -119,7 +125,8 @@ public class AuthServiceImplement implements AuthService {
         String encodedRefreshToken = refreshTokenProvider.hash(refreshToken);
 
         // DB에서 Refresh Token으로 사용자 조회
-        UserEntity userEntity = userRepository.findByRefreshToken(encodedRefreshToken);
+        Optional<UserEntity> optionalUserEntity = userRepository.findByRefreshTokenForUpdate(encodedRefreshToken);
+        UserEntity userEntity = optionalUserEntity.orElse(null);
         if (userEntity == null) {
           refreshTokenProvider.expireRefreshTokenCookie(response);
           return RefreshTokenResponseDto.invalidRefreshToken();
@@ -156,7 +163,8 @@ public class AuthServiceImplement implements AuthService {
 
       if (refreshToken != null) {
         String encodedRefreshToken = refreshTokenProvider.hash(refreshToken);
-        UserEntity userEntity = userRepository.findByRefreshToken(encodedRefreshToken);
+        Optional<UserEntity> optionalUserEntity = userRepository.findByRefreshTokenForUpdate(encodedRefreshToken);
+        UserEntity userEntity = optionalUserEntity.orElse(null);
 
         if (userEntity != null) clearRefreshToken(userEntity);
       }
@@ -175,13 +183,34 @@ public class AuthServiceImplement implements AuthService {
 
     userEntity.setRefreshToken(encodedRefreshToken);
     userEntity.setRefreshTokenExpiresAt(refreshTokenExpiresAt);
-    userRepository.save(userEntity);
+    userRepository.saveAndFlush(userEntity);
   }
 
   private void clearRefreshToken(UserEntity userEntity) {
     userEntity.setRefreshToken(null);
     userEntity.setRefreshTokenExpiresAt(null);
-    userRepository.save(userEntity);
+    userRepository.saveAndFlush(userEntity);
+  }
+
+  private ResponseEntity<? super SignUpResponseDto> getSignUpIntegrityViolationResponse(DataIntegrityViolationException exception) {
+    String message = getRootMessage(exception);
+
+    if (message.contains("uk_user_nickname")) return SignUpResponseDto.duplicateNickname();
+    if (message.contains("uk_user_tel_number")) return SignUpResponseDto.duplicateTelNumber();
+    if (message.contains("primary")) return SignUpResponseDto.duplicateEmail();
+
+    return ResponseDto.databaseError();
+  }
+
+  private String getRootMessage(Throwable throwable) {
+    Throwable root = throwable;
+
+    while (root.getCause() != null) root = root.getCause();
+
+    String message = root.getMessage();
+    if (message == null) return "";
+
+    return message.toLowerCase(Locale.ROOT);
   }
 
 }
