@@ -16,7 +16,7 @@ export default function Authentication() {
   //          state: 화면 상태          //
   const [view, setView] = useState<'sign-in' | 'sign-up'>('sign-in');
   //          state: 쿠키 상태          //
-  const [cookies, setCookie] = useCookies();
+  const [, setCookie] = useCookies();
 
   //          function: 네비게이터 함수          //
   const navigate= useNavigate();
@@ -51,13 +51,11 @@ export default function Authentication() {
       if (code === 'SF' || code === 'VF') setError(true);
       if (code !== 'SU') return;
 
-      const { token, expirationTime, refreshToken } = responseBody as SignInResponseDto;
+      const { token, expirationTime } = responseBody as SignInResponseDto;
       const now = new Date().getTime();
       const expires = new Date(now + expirationTime * 1000);
-      const refreshExpires = new Date(now + 7 * 24 * 60 * 60 * 1000); // Refresh Token 7일 만료
 
       setCookie('accessToken', token, { expires, path: MAIN_PATH() });
-      setCookie('refreshToken', refreshToken, { expires: refreshExpires, path: MAIN_PATH() });
       navigate(MAIN_PATH());
 
     }

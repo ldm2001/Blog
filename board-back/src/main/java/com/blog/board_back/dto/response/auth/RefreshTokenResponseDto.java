@@ -17,20 +17,17 @@ public class RefreshTokenResponseDto extends ResponseDto {
     private String token;
     // AccessToken 만료 시간 (초, 15분 = 900)
     private int expirationTime;
-    // 새로 발급된 Refresh Token (회전 방식)
-    private String refreshToken;
 
     // private 생성자: 성공 응답 생성에만 사용
-    private RefreshTokenResponseDto(String token, String refreshToken) {
+    private RefreshTokenResponseDto(String token) {
         super(ResponseCode.SUCCESS, ResponseMessage.SUCCESS);
         this.token = token;
         this.expirationTime = 900; // 15분
-        this.refreshToken = refreshToken;
     }
 
     // 토큰 갱신 성공 시 응답 객체 생성
-    public static ResponseEntity<RefreshTokenResponseDto> success(String token, String refreshToken) {
-        RefreshTokenResponseDto result = new RefreshTokenResponseDto(token, refreshToken);
+    public static ResponseEntity<RefreshTokenResponseDto> success(String token) {
+        RefreshTokenResponseDto result = new RefreshTokenResponseDto(token);
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 

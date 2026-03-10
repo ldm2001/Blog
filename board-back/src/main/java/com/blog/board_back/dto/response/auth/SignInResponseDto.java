@@ -16,20 +16,17 @@ public class SignInResponseDto extends ResponseDto {
   private String token;
   // AccessToken 만료 시간 (초, 15분 = 900)
   private int expirationTime;
-  // Refresh Token (회전 방식, DB 저장)
-  private String refreshToken;
 
   // private 생성자: 성공시 응답 생성에만 사용
-  private SignInResponseDto(String token, String refreshToken) {
+  private SignInResponseDto(String token) {
     super(ResponseCode.SUCCESS, ResponseMessage.SUCCESS); // 부모 클래스에 성공 코드/메시지 전달
-    this.token = token;           // 발급된 JWT AccessToken 값
-    this.expirationTime = 900;    // AccessToken 만료 시간 (15분)
-    this.refreshToken = refreshToken; // 발급된 Refresh Token 값
+    this.token = token; // 발급된 JWT AccessToken 값
+    this.expirationTime = 900; // AccessToken 만료 시간 - 15분
   }
 
   // 로그인 성공 시 응답 객체 생성
-  public static ResponseEntity<SignInResponseDto> success(String token, String refreshToken) {
-    SignInResponseDto result = new SignInResponseDto(token, refreshToken); // 성공 응답 객체 생성
+  public static ResponseEntity<SignInResponseDto> success(String token) {
+    SignInResponseDto result = new SignInResponseDto(token); // 성공 응답 객체 생성
     return ResponseEntity.status(HttpStatus.OK).body(result); // 200으로 반환
   }
 

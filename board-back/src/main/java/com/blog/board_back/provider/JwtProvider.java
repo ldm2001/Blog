@@ -45,11 +45,6 @@ public class JwtProvider {
     
     }
 
-    // Refresh Token 생성 (UUID 기반 opaque token, 회전 방식으로 DB 저장)
-    public String createRefreshToken() {
-        return java.util.UUID.randomUUID().toString();
-    }
-
     // JWT 토큰 유효성 검증 및 이메일 추출
     public String validate(String jwt) {
 

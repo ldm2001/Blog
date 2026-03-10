@@ -1,4 +1,4 @@
-import { fileUploadRequest, patchBoardRequest, postBoardRequest } from 'apis';
+import { fileUploadRequest, patchBoardRequest, postBoardRequest, signOutRequest } from 'apis';
 import { PatchBoardRequestDto, PostBoardRequestDto } from 'apis/request/board';
 import { ResponseDto } from 'apis/response';
 import { PatchBoardResponseDto, PostBoardResponseDto } from 'apis/response/board';
@@ -115,10 +115,11 @@ export default function Header() {
     };
     //          event handler: 로그아웃 버튼 클릭 이벤트 처리 함수          //
     const onSignOutButtonClickHandler = () => {
-      resetLoginUser();
-      setCookie('accessToken', '', { path: MAIN_PATH(), expires: new Date() });
-      setCookie('refreshToken', '', { path: MAIN_PATH(), expires: new Date() });
-      navigate(MAIN_PATH());
+      signOutRequest().finally(() => {
+        resetLoginUser();
+        setCookie('accessToken', '', { path: MAIN_PATH(), expires: new Date() });
+        navigate(MAIN_PATH());
+      });
     };
     //          event handler: 로그인 버튼 클릭 이벤트 처리 함수          //
     const onSignInButtonClickHandler = () => {

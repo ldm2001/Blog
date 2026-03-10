@@ -1,5 +1,7 @@
 package com.blog.board_back.entity;
 
+import java.time.LocalDateTime;
+
 import com.blog.board_back.dto.request.auth.SignUpRequestDto; 
 
 import jakarta.persistence.Entity; 
@@ -42,6 +44,9 @@ public class UserEntity {
     // Refresh Token (로그인 시 발급, nullable)
     @Setter
     private String refreshToken;
+    // Refresh Token 서버 만료 시각
+    @Setter
+    private LocalDateTime refreshTokenExpiresAt;
 
     // 회원가입 요청 DTO로 엔티티를 초기화하는 생성자
     public UserEntity(SignUpRequestDto dto) {
@@ -55,4 +60,3 @@ public class UserEntity {
     }
 
 }
-

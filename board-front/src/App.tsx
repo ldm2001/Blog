@@ -31,7 +31,12 @@ function App() {
   const getSignInUserResponse = (responseBody: GetSignInUserResponseDto | ResponseDto | null) => {
     if(!responseBody) return;
     const { code } = responseBody;
-    if (code === 'AF' || code === 'NU' || code === 'DBE') {
+    if (code === 'AF' || code === 'NU') {
+      resetLoginUser();
+      setCookie('accessToken', '', { path: '/', expires: new Date() });
+      return;
+    }
+    if (code === 'DBE') {
       resetLoginUser();
       return;
     }
@@ -42,26 +47,21 @@ function App() {
   //          effect: accessToken cookie 값 변경될 때 마다 실행할 함수          //
   useEffect(() => {
     if (!cookies.accessToken) {
-      // AccessToken 만료 시 RefreshToken으로 자동 갱신 시도
-      if (cookies.refreshToken) {
-        refreshTokenRequest(cookies.refreshToken).then(response => {
-          if (!response || response.code !== 'SU') {
-            resetLoginUser();
-            return;
-          }
-          const { token, expirationTime, refreshToken } = response as RefreshTokenResponseDto;
-          const expires = new Date(Date.now() + expirationTime * 1000);
-          const refreshExpires = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
-          setCookie('accessToken', token, { expires, path: '/' });
-          setCookie('refreshToken', refreshToken, { expires: refreshExpires, path: '/' });
-        });
-      } else {
-        resetLoginUser();
-      }
+      // AccessToken 만료 시 HttpOnly RefreshToken 쿠키로 자동 갱신 시도
+      refreshTokenRequest().then(response => {
+        if (!response || response.code !== 'SU') {
+          resetLoginUser();
+          setCookie('accessToken', '', { path: '/', expires: new Date() });
+          return;
+        }
+        const { token, expirationTime } = response as RefreshTokenResponseDto;
+        const expires = new Date(Date.now() + expirationTime * 1000);
+        setCookie('accessToken', token, { expires, path: '/' });
+      });
       return;
     }
     getSignInUserRequest(cookies.accessToken).then(getSignInUserResponse);
-  }, [cookies.accessToken]);
+  }, [cookies.accessToken, resetLoginUser, setCookie, setLoginUser]);
 
   //          render: Application 렌더링          //
   // description: 메인 화면 : '/' - Main //

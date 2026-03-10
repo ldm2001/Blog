@@ -30,4 +30,10 @@ public class ResponseDto {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseBody); // 400 반환
     }
 
+    // 요청 성공 시(200 OK) 응답용 static 메서드
+    public static ResponseEntity<ResponseDto> successResponse() {
+        ResponseDto responseBody = new ResponseDto(ResponseCode.SUCCESS, ResponseMessage.SUCCESS);
+        return ResponseEntity.status(HttpStatus.OK).body(responseBody);
+    }
+
 }
