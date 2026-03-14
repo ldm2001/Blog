@@ -3,12 +3,13 @@ import axios from 'axios';
 import { SignInRequestDto, SignUpRequestDto } from './request/auth';
 import { ResponseDto } from './response';
 import { RefreshTokenResponseDto, SignInResponseDto, SignUpResponseDto } from './response/auth';
-import { API_DOMAIN } from './common';
+import { API_DOMAIN, authAxios } from './common';
 
 const SIGN_IN_URL = () => `${API_DOMAIN}/auth/sign-in`;
 const SIGN_UP_URL = () => `${API_DOMAIN}/auth/sign-up`;
 const REFRESH_TOKEN_URL = () => `${API_DOMAIN}/auth/refresh`;
 const SIGN_OUT_URL = () => `${API_DOMAIN}/auth/sign-out`;
+const CONFIRM_PASSWORD_URL = () => `/auth/confirm-password`;
 const AUTH_COOKIE_CONFIG = { withCredentials: true };
 
 export const signInRequest = async (requestBody: SignInRequestDto) => {
@@ -55,6 +56,21 @@ export const refreshTokenRequest = async () => {
 
 export const signOutRequest = async () => {
   const result = await axios.post(SIGN_OUT_URL(), {}, AUTH_COOKIE_CONFIG)
+    .then(response => {
+      const responseBody: ResponseDto = response.data;
+      return responseBody;
+    })
+    .catch(error => {
+      if (!error.response) return null;
+      const responseBody: ResponseDto = error.response.data;
+      return responseBody;
+    });
+  return result;
+};
+
+// 민감 작업 재인증 (비밀번호 확인)
+export const confirmPasswordRequest = async (password: string) => {
+  const result = await authAxios.post(CONFIRM_PASSWORD_URL(), { password })
     .then(response => {
       const responseBody: ResponseDto = response.data;
       return responseBody;

@@ -11,7 +11,6 @@ import { fileUploadRequest, getUserRequest, patchNicknameRequest, patchProfileIm
 import { GetUserResponseDto, PatchNicknameResponseDto, PatchProfileImageResponseDto } from 'apis/response/user';
 import { ResponseDto } from 'apis/response';
 import { PatchNicknameRequestDto, PatchProfileImageRequestDto } from 'apis/request/user';
-import { useCookies } from 'react-cookie';
 
 //          component: 유저 화면 컴포넌트          //
 export default function User() {
@@ -22,8 +21,6 @@ export default function User() {
   const [isMyPage, setIsMyPage] = useState(false);
   //          state: userEmail 상태          //
   const { userEmail } = useParams();
-  //          state: 쿠키 상태          //
-  const [cookies] = useCookies();
 
   //          function: 네비게이트 함수          //
   const navigate = useNavigate();
@@ -106,7 +103,7 @@ export default function User() {
           profileImage: response,
           previousProfileImage: profileImage,
         };
-        patchProfileImageRequest(requestBody, cookies.accessToken).then(patchProfileImageResponse);
+        patchProfileImageRequest(requestBody).then(patchProfileImageResponse);
       });
     };
 
@@ -121,7 +118,7 @@ export default function User() {
       setIsNicknameEditing(false);
       if (editNickname === nickname) return;
       const requestBody: PatchNicknameRequestDto = { nickname: editNickname };
-      patchNicknameRequest(requestBody, cookies.accessToken).then(patchNicknameResponse);
+      patchNicknameRequest(requestBody).then(patchNicknameResponse);
     };
 
     //          effect: isNicknameEditing 변경 시 실행될 함수          //

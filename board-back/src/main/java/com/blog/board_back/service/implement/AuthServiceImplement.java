@@ -11,6 +11,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.blog.board_back.dto.request.auth.PasswordConfirmRequestDto;
 import com.blog.board_back.dto.request.auth.SignInRequestDto;
 import com.blog.board_back.dto.request.auth.SignUpRequestDto;
 import com.blog.board_back.dto.response.ResponseDto;
@@ -173,6 +174,23 @@ public class AuthServiceImplement implements AuthService {
       return ResponseDto.successResponse();
     } catch (Exception exception) {
       log.error("AuthService signOut error", exception);
+      return ResponseDto.databaseError();
+    }
+  }
+
+  // 민감 작업 재인증 비즈니스 로직
+  @Override
+  public ResponseEntity<ResponseDto> confirmPassword(PasswordConfirmRequestDto dto, String email) {
+    try {
+      UserEntity userEntity = userRepository.findByEmail(email);
+      if (userEntity == null) return ResponseDto.validationFailed();
+
+      boolean isMatched = passwordEncoder.matches(dto.getPassword(), userEntity.getPassword());
+      if (!isMatched) return SignInResponseDto.signInFail();
+
+      return ResponseDto.successResponse();
+    } catch (Exception exception) {
+      log.error("AuthService confirmPassword error", exception);
       return ResponseDto.databaseError();
     }
   }

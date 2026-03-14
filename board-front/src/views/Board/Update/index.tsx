@@ -3,7 +3,6 @@ import { ResponseDto } from 'apis/response';
 import { GetBoardResponseDto } from 'apis/response/board';
 import { MAIN_PATH } from 'constant';
 import { ChangeEvent, useEffect, useRef, useState } from 'react';
-import { useCookies } from 'react-cookie';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useBoardStore, useLoginUserStore } from 'stores';
 import { convertUrlsToFile } from 'utils';
@@ -28,8 +27,6 @@ export default function BoardWrite() {
   //          state: 로그인 유저 상태          //
   const { loginUser } = useLoginUserStore();
 
-  //          state: 쿠키 상태          //
-  const [cookies, setCookies] = useCookies();
   //          state: 게시물 이미지 미리보기 URL 상태          //
   const [imageUrls, setImageUrls] = useState<string[]>([]);
 
@@ -118,8 +115,7 @@ export default function BoardWrite() {
 
   //          effect: 마운트 실행 함수          //
   useEffect(() => {
-    const accessToken = cookies.accessToken;
-    if (!accessToken) {
+    if (!loginUser) {
       navigate(MAIN_PATH());
       return;
     }

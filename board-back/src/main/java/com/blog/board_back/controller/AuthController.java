@@ -1,11 +1,13 @@
 package com.blog.board_back.controller;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.blog.board_back.dto.request.auth.PasswordConfirmRequestDto;
 import com.blog.board_back.dto.request.auth.SignInRequestDto;
 import com.blog.board_back.dto.request.auth.SignUpRequestDto;
 import com.blog.board_back.dto.response.ResponseDto;
@@ -69,6 +71,16 @@ public class AuthController {
     HttpServletResponse response
   ) {
     ResponseEntity<ResponseDto> result = authService.signOut(request, response);
+    return result;
+  }
+
+  // 민감 작업 재인증(비밀번호 확인) 엔드포인트
+  @PostMapping("/confirm-password")
+  public ResponseEntity<ResponseDto> confirmPassword(
+    @RequestBody @Valid PasswordConfirmRequestDto requestBody,
+    @AuthenticationPrincipal String email
+  ) {
+    ResponseEntity<ResponseDto> result = authService.confirmPassword(requestBody, email);
     return result;
   }
 

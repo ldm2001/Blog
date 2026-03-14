@@ -5,9 +5,9 @@ import { SignInResponseDto, SignUpResponseDto } from 'apis/response/auth';
 import InputBox from 'components/InputBox';
 import { MAIN_PATH } from 'constant';
 import { ChangeEvent, KeyboardEvent, useEffect, useRef, useState } from 'react';
-import { useCookies } from 'react-cookie';
 import { Address, useDaumPostcodePopup } from 'react-daum-postcode';
 import { useNavigate } from 'react-router-dom';
+import { useLoginUserStore } from 'stores';
 import './style.css';
 
 //          component: 인증 화면 컴포넌트          //
@@ -15,8 +15,8 @@ export default function Authentication() {
 
   //          state: 화면 상태          //
   const [view, setView] = useState<'sign-in' | 'sign-up'>('sign-in');
-  //          state: 쿠키 상태          //
-  const [, setCookie] = useCookies();
+  //          state: accessToken 메모리 상태          //
+  const { setAccessToken } = useLoginUserStore();
 
   //          function: 네비게이터 함수          //
   const navigate= useNavigate();
@@ -51,11 +51,9 @@ export default function Authentication() {
       if (code === 'SF' || code === 'VF') setError(true);
       if (code !== 'SU') return;
 
-      const { token, expirationTime } = responseBody as SignInResponseDto;
-      const now = new Date().getTime();
-      const expires = new Date(now + expirationTime * 1000);
+      const { token } = responseBody as SignInResponseDto;
 
-      setCookie('accessToken', token, { expires, path: MAIN_PATH() });
+      setAccessToken(token);
       navigate(MAIN_PATH());
 
     }

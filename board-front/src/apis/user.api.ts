@@ -8,15 +8,15 @@ import {
   PatchNicknameResponseDto,
   PatchProfileImageResponseDto,
 } from './response/user';
-import { API_DOMAIN, authorization } from './common';
+import { API_DOMAIN, authAxios } from './common';
 
 const GET_SIGN_IN_USER_URL = () => `${API_DOMAIN}/user`;
 const GET_USER_URL = (userEmail: string) => `${API_DOMAIN}/user/${userEmail}`;
-const PATCH_NICKNAME_URL = () => `${API_DOMAIN}/user/nickname`;
-const PATCH_PROFILE_IMAGE_URL = () => `${API_DOMAIN}/user/profile-image`;
+const PATCH_NICKNAME_URL = () => `/user/nickname`;
+const PATCH_PROFILE_IMAGE_URL = () => `/user/profile-image`;
 
-export const getSignInUserRequest = async (accessToken: string) => {
-  const result = await axios.get(GET_SIGN_IN_USER_URL(), authorization(accessToken))
+export const getSignInUserRequest = async () => {
+  const result = await authAxios.get(GET_SIGN_IN_USER_URL())
     .then(response => {
       const responseBody: GetSignInUserResponseDto = response.data;
       return responseBody;
@@ -43,8 +43,8 @@ export const getUserRequest = async (userEmail: string) => {
   return result;
 };
 
-export const patchNicknameRequest = async (requestBody: PatchNicknameRequestDto, accessToken: string) => {
-  const result = await axios.patch(PATCH_NICKNAME_URL(), requestBody, authorization(accessToken))
+export const patchNicknameRequest = async (requestBody: PatchNicknameRequestDto) => {
+  const result = await authAxios.patch(PATCH_NICKNAME_URL(), requestBody)
     .then(response => {
       const responseBody: PatchNicknameResponseDto = response.data;
       return responseBody;
@@ -57,8 +57,8 @@ export const patchNicknameRequest = async (requestBody: PatchNicknameRequestDto,
   return result;
 };
 
-export const patchProfileImageRequest = async (requestBody: PatchProfileImageRequestDto, accessToken: string) => {
-  const result = await axios.patch(PATCH_PROFILE_IMAGE_URL(), requestBody, authorization(accessToken))
+export const patchProfileImageRequest = async (requestBody: PatchProfileImageRequestDto) => {
+  const result = await authAxios.patch(PATCH_PROFILE_IMAGE_URL(), requestBody)
     .then(response => {
       const responseBody: PatchProfileImageResponseDto = response.data;
       return responseBody;

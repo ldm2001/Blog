@@ -17,17 +17,14 @@ import { useLoginUserStore } from 'stores';
 import { PostCommentRequestDto } from 'apis/request/board';
 import dayjs from 'dayjs';
 import { usePagination } from 'hooks';
-import { useCookies } from 'react-cookie';
 
 //          component: 게시물 상세 화면 컴포넌트          //
 export default function BoardDetail() {
-  
+
   //          state: 게시물 번호 path variable 상태          //
   const { boardNumber } = useParams();
   //          state: 로그인 유저 상태          //
   const { loginUser } = useLoginUserStore();
-  //          state: 쿠키 상태          //
-  const [cookies, setCookies] = useCookies();
 
   //          function 네비게이트 함수          //
   const navigate = useNavigate();
@@ -110,10 +107,10 @@ export default function BoardDetail() {
     }
     //          event handler: 삭제 버튼 클릭 이벤트 처리          //
     const onDeleteButtonClickHandler = () => {
-      if(!boardNumber || !board || !loginUser || !cookies.accessToken) return;
+      if(!boardNumber || !board || !loginUser) return;
       if(loginUser.email !== board.writerEmail) return;
-      
-      deleteBoardRequest(boardNumber, cookies.accessToken).then(deleteBoardResponse);
+
+      deleteBoardRequest(boardNumber).then(deleteBoardResponse);
     }
 
     //          effect: 게시물 번호 path variable이 바뀔때 마다 게시물 불러오기          //
@@ -251,8 +248,8 @@ export default function BoardDetail() {
 
     //          event handler: 좋아요 클릭 이벤트 처리         //
     const onFavoriteClickHandler = () => {
-      if(!boardNumber || !loginUser || !cookies.accessToken) return;
-      putFavoriteRequest(boardNumber, cookies.accessToken).then(putFavoriteResponse);
+      if(!boardNumber || !loginUser) return;
+      putFavoriteRequest(boardNumber).then(putFavoriteResponse);
     }
     //          event handler: 좋아요 박스 보기 클릭 이벤트 처리         //
     const onShowFavoriteClickHandler = () => {
@@ -264,10 +261,10 @@ export default function BoardDetail() {
     }
     //          event handler: 댓글 작성 버튼 클릭 이벤트 처리         //
     const onCommentSubmitButtonClickHandler = () => {
-      if (!comment || !boardNumber || !loginUser || !cookies.accessToken) return;
-      
+      if (!comment || !boardNumber || !loginUser) return;
+
       const requestBody: PostCommentRequestDto = { content: comment };
-      postCommentRequest(boardNumber, requestBody, cookies.accessToken).then(postCommentResponse);
+      postCommentRequest(boardNumber, requestBody).then(postCommentResponse);
     }
     //          event handler: 댓글 변경 이벤트 처리         //
     const onCommentChangeHandler = (event: ChangeEvent<HTMLTextAreaElement>) => {

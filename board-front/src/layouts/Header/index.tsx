@@ -4,7 +4,6 @@ import { ResponseDto } from 'apis/response';
 import { PatchBoardResponseDto, PostBoardResponseDto } from 'apis/response/board';
 import { AUTH_PATH, BOARD_DETAIL_PATH, BOARD_PATH, BOARD_UPDATE_PATH, BOARD_WRITE_PATH, MAIN_PATH, SEARCH_PATH, USER_PATH } from 'constant';
 import { ChangeEvent, KeyboardEvent, useEffect, useRef, useState } from 'react';
-import { useCookies } from 'react-cookie';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { useBoardStore, useLoginUserStore } from 'stores';
 import './style.css';
@@ -13,11 +12,9 @@ import './style.css';
 export default function Header() {
 
   //          state: 로그인 유저 상태          //
-  const { loginUser, setLoginUser, resetLoginUser } = useLoginUserStore();
+  const { loginUser, resetLoginUser } = useLoginUserStore();
   //          state: path 상태          //
   const { pathname } = useLocation();
-  //          state: cookie 상태          //
-  const [cookies, setCookie] = useCookies();
   //          state: 로그인 상태          //
   const [isLogin, setLogin] = useState<boolean>(false);
   //          state: 인증 페이지 상태          //
@@ -34,7 +31,7 @@ export default function Header() {
   const [isBoardUpdatePage, setBoardUpdatePage] = useState<boolean>(false);
   //          state: 유저 페이지 상태          //
   const [isUserPage, setUserPage] = useState<boolean>(false);
-  
+
   //          function: 네비게이트 함수          //
   const navigate = useNavigate();
 
@@ -117,7 +114,6 @@ export default function Header() {
     const onSignOutButtonClickHandler = () => {
       signOutRequest().finally(() => {
         resetLoginUser();
-        setCookie('accessToken', '', { path: MAIN_PATH(), expires: new Date() });
         navigate(MAIN_PATH());
       });
     };
@@ -172,8 +168,7 @@ export default function Header() {
 
     //          event handler: 업로드 버튼 클릭 이벤트 처리          //
     const onUploadButtonClickHandler = async () => {
-      const accessToken = cookies.accessToken;
-      if (!accessToken) return;
+      if (!loginUser) return;
 
       const boardImageList: string[] = [];
 
@@ -190,17 +185,17 @@ export default function Header() {
         const requestBody: PostBoardRequestDto = {
           title, content, boardImageList
         }
-        postBoardRequest(requestBody, accessToken).then(postBoardResponse);
+        postBoardRequest(requestBody).then(postBoardResponse);
       } else {
         if (!boardNumber) return;
         const requestBody: PatchBoardRequestDto = {
           title, content, boardImageList
         }
-        patchBoardRequest(boardNumber, requestBody, accessToken).then(patchBoardResponse);
+        patchBoardRequest(boardNumber, requestBody).then(patchBoardResponse);
       }
 
     }
-    
+
     //          render: 업로드 버튼 컴포넌트 렌더링          //
     if (title && content)
     return <div className='black-button' onClick={onUploadButtonClickHandler}> {'업로드'}</div>;

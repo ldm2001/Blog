@@ -17,7 +17,7 @@ import {
   PutFavoriteResponseDto,
 } from './response/board';
 import { GetUserBoardListResponseDto } from './response/user';
-import { API_DOMAIN, authorization } from './common';
+import { API_DOMAIN, authAxios } from './common';
 
 const GET_BOARD_URL = (boardNumber: number | string) => `${API_DOMAIN}/board/${boardNumber}`;
 const GET_LATEST_BOARD_LIST_URL = () => `${API_DOMAIN}/board/latest-list`;
@@ -25,11 +25,11 @@ const GET_TOP_3_BOARD_LIST_URL = () => `${API_DOMAIN}/board/top-3?_t=${Date.now(
 const INCREASE_VIEW_COUNT_URL = (boardNumber: number | string) => `${API_DOMAIN}/board/${boardNumber}/increase-view-count`;
 const GET_FAVORITE_LIST_URL = (boardNumber: number | string) => `${API_DOMAIN}/board/${boardNumber}/favorite-list`;
 const GET_COMMENT_LIST_URL = (boardNumber: number | string) => `${API_DOMAIN}/board/${boardNumber}/comment-list`;
-const POST_BOARD_URL = () => `${API_DOMAIN}/board`;
-const POST_COMMENT_URL = (boardNumber: number | string) => `${API_DOMAIN}/board/${boardNumber}/comment`;
-const PATCH_BOARD_URL = (boardNumber: number | string) => `${API_DOMAIN}/board/${boardNumber}`;
-const PUT_FAVORITE_URL = (boardNumber: number | string) => `${API_DOMAIN}/board/${boardNumber}/favorite`;
-const DELETE_BOARD_URL = (boardNumber: number | string) => `${API_DOMAIN}/board/${boardNumber}`;
+const POST_BOARD_URL = () => `/board`;
+const POST_COMMENT_URL = (boardNumber: number | string) => `/board/${boardNumber}/comment`;
+const PATCH_BOARD_URL = (boardNumber: number | string) => `/board/${boardNumber}`;
+const PUT_FAVORITE_URL = (boardNumber: number | string) => `/board/${boardNumber}/favorite`;
+const DELETE_BOARD_URL = (boardNumber: number | string) => `/board/${boardNumber}`;
 const GET_BOARD_SEARCH_LIST_URL = (searchWord: string, page: number, preSearchWord?: string) =>
   `${API_DOMAIN}/board/search-list/${searchWord}${preSearchWord ? `/${preSearchWord}` : ''}?page=${page}`;
 const GET_USER_BOARD_LIST_URL = (userEmail: string, page: number) =>
@@ -119,8 +119,8 @@ export const getCommentListRequest = async (boardNumber: number | string) => {
   return result;
 };
 
-export const postBoardRequest = async (requestBody: PostBoardRequestDto, accessToken: string) => {
-  const result = await axios.post(POST_BOARD_URL(), requestBody, authorization(accessToken))
+export const postBoardRequest = async (requestBody: PostBoardRequestDto) => {
+  const result = await authAxios.post(POST_BOARD_URL(), requestBody)
     .then(response => {
       const responseBody: PostBoardResponseDto = response.data;
       return responseBody;
@@ -133,8 +133,8 @@ export const postBoardRequest = async (requestBody: PostBoardRequestDto, accessT
   return result;
 };
 
-export const postCommentRequest = async (boardNumber: number | string, requestBody: PostCommentRequestDto, accessToken: string) => {
-  const result = await axios.post(POST_COMMENT_URL(boardNumber), requestBody, authorization(accessToken))
+export const postCommentRequest = async (boardNumber: number | string, requestBody: PostCommentRequestDto) => {
+  const result = await authAxios.post(POST_COMMENT_URL(boardNumber), requestBody)
     .then(response => {
       const responseBody: PostCommentResponseDto = response.data;
       return responseBody;
@@ -147,8 +147,8 @@ export const postCommentRequest = async (boardNumber: number | string, requestBo
   return result;
 };
 
-export const patchBoardRequest = async (boardNumber: number | string, requestBody: PatchBoardRequestDto, accessToken: string) => {
-  const result = await axios.patch(PATCH_BOARD_URL(boardNumber), requestBody, authorization(accessToken))
+export const patchBoardRequest = async (boardNumber: number | string, requestBody: PatchBoardRequestDto) => {
+  const result = await authAxios.patch(PATCH_BOARD_URL(boardNumber), requestBody)
     .then(response => {
       const responseBody: PatchBoardResponseDto = response.data;
       return responseBody;
@@ -161,8 +161,8 @@ export const patchBoardRequest = async (boardNumber: number | string, requestBod
   return result;
 };
 
-export const putFavoriteRequest = async (boardNumber: number | string, accessToken: string) => {
-  const result = await axios.put(PUT_FAVORITE_URL(boardNumber), {}, authorization(accessToken))
+export const putFavoriteRequest = async (boardNumber: number | string) => {
+  const result = await authAxios.put(PUT_FAVORITE_URL(boardNumber), {})
     .then(response => {
       const responseBody: PutFavoriteResponseDto = response.data;
       return responseBody;
@@ -175,8 +175,8 @@ export const putFavoriteRequest = async (boardNumber: number | string, accessTok
   return result;
 };
 
-export const deleteBoardRequest = async (boardNumber: number | string, accessToken: string) => {
-  const result = await axios.delete(DELETE_BOARD_URL(boardNumber), authorization(accessToken))
+export const deleteBoardRequest = async (boardNumber: number | string) => {
+  const result = await authAxios.delete(DELETE_BOARD_URL(boardNumber))
     .then(response => {
       const responseBody: DeleteBoardResponseDto = response.data;
       return responseBody;

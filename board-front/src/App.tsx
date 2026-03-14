@@ -1,11 +1,9 @@
 import { getSignInUserRequest, refreshTokenRequest } from 'apis';
 import { ResponseDto } from 'apis/response';
-import { RefreshTokenResponseDto } from 'apis/response/auth';
 import { GetSignInUserResponseDto } from 'apis/response/user';
 import { AUTH_PATH, BOARD_DETAIL_PATH, BOARD_PATH, BOARD_UPDATE_PATH, BOARD_WRITE_PATH, MAIN_PATH, SEARCH_PATH, USER_PATH } from 'constant';
 import Container from 'layouts/Container';
 import { useEffect } from 'react';
-import { useCookies } from 'react-cookie';
 import { Route, Routes } from 'react-router-dom';
 import { useLoginUserStore } from 'stores';
 import { User } from 'types/interface';
@@ -23,9 +21,7 @@ import './App.css';
 function App() {
 
   //          state: 로그인 유저 전역 상태          //
-  const { setLoginUser, resetLoginUser } = useLoginUserStore();
-  //          state: cookie 상태          //
-  const [cookies, setCookie] = useCookies();
+  const { accessToken, setAccessToken, setLoginUser, resetLoginUser } = useLoginUserStore();
 
   //          function: get sign in response 처리 함수          //
   const getSignInUserResponse = (responseBody: GetSignInUserResponseDto | ResponseDto | null) => {
@@ -33,7 +29,6 @@ function App() {
     const { code } = responseBody;
     if (code === 'AF' || code === 'NU') {
       resetLoginUser();
-      setCookie('accessToken', '', { path: '/', expires: new Date() });
       return;
     }
     if (code === 'DBE') {
@@ -44,24 +39,27 @@ function App() {
     setLoginUser(loginUser);
   }
 
-  //          effect: accessToken cookie 값 변경될 때 마다 실행할 함수          //
+  //          effect: 마운트 시 RefreshToken으로 세션 복원          //
   useEffect(() => {
-    if (!cookies.accessToken) {
-      // AccessToken 만료 시 HttpOnly RefreshToken 쿠키로 자동 갱신 시도
-      refreshTokenRequest().then(response => {
-        if (!response || response.code !== 'SU') {
-          resetLoginUser();
-          setCookie('accessToken', '', { path: '/', expires: new Date() });
-          return;
-        }
-        const { token, expirationTime } = response as RefreshTokenResponseDto;
-        const expires = new Date(Date.now() + expirationTime * 1000);
-        setCookie('accessToken', token, { expires, path: '/' });
-      });
-      return;
-    }
-    getSignInUserRequest(cookies.accessToken).then(getSignInUserResponse);
-  }, [cookies.accessToken, resetLoginUser, setCookie, setLoginUser]);
+    if (accessToken) return;
+    // 새로고침 등으로 메모리가 비었을 때 HttpOnly 쿠키의 RefreshToken으로 복원 시도
+    refreshTokenRequest().then(response => {
+      if (!response || response.code !== 'SU') {
+        resetLoginUser();
+        return;
+      }
+      const { token } = response as { token: string; code: string };
+      setAccessToken(token);
+    });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  //          effect: accessToken 변경 시 유저 정보 조회          //
+  useEffect(() => {
+    if (!accessToken) return;
+    getSignInUserRequest().then(getSignInUserResponse);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [accessToken]);
 
   //          render: Application 렌더링          //
   // description: 메인 화면 : '/' - Main //
